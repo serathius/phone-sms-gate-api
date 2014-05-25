@@ -34,3 +34,4 @@ clean:
 	@-rm libgtest.a 2>/dev/null || true
 	@-rm $(OBJECTS) 2>/dev/null || true
 	@-rm $(TEST_OBJECTS) 2>/dev/null || true
+	@-rm $(EXEC) 2>/dev/null || true
