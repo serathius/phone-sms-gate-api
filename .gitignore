@@ -1,0 +1,16 @@
+# object files
+*.o
+
+# archives
+gmock-1.7.0.zip
+gtest-1.7.0.zip
+
+# test files
+/gmock-1.7.0/*
+/gtest-1.7.0/*
+
+# temporary files
+*~
+
+# exectuables
+/bin/*

@@ -2,14 +2,15 @@ TEST_SYSTEM_FLAGS = -isystem gtest-1.7.0/include -isystem gmock-1.7.0/include
 TEST_I_FLAGS = -I gtest-1.7.0 -I gmock-1.7.0
 TESTS = tests/test_simple.cpp
 TEST_OBJECTS = $(TESTS:.cpp=.o)
-SOURCES = 
+SOURCES = $(wildcard src/*.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 CFLAGS = -std=c++11
+EXEC = bin/phone-sms-gate-api
 	
-all : $(OBJECTS)
-	@g++ $(CFLAGS) $(OBJECTS) src/main.cpp -o url-in-file-browser.o
+$(EXEC) : $(OBJECTS)
+	@g++ $(OBJECTS) -o $(EXEC)
 
-.cpp.o:
+%.o: %.cpp
 	@g++ $(CFLAGS) -c $< -o $@
 
 test : libgtest.a
@@ -25,7 +26,7 @@ gtest-all.o:
 	@g++ $(TEST_SYSTEM_FLAGS) $(TEST_I_FLAGS) -c gtest-1.7.0/src/gtest-all.cc
 
 clean:
-	@-rm url-in-file-browser.o 2>/dev/null || true
+	@-rm phone-sms-gate-api.o 2>/dev/null || true
 	@-rm test.o 2>/dev/null || true
 	@-rm gmock-all.o 2>/dev/null || true
 	@-rm gtest-all.o 2>/dev/null || true
