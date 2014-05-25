@@ -8,6 +8,7 @@ CFLAGS = -std=c++11
 EXEC = bin/phone-sms-gate-api
 	
 $(EXEC) : $(OBJECTS)
+	mkdir -p bin
 	@g++ $(OBJECTS) -o $(EXEC)
 
 %.o: %.cpp
