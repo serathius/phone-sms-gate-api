@@ -1,15 +1,22 @@
 package com.example.smsgate;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends Activity {
 
+	Button bRun, bStop;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bStop = (Button)findViewById(R.id.bStop);
+        bRun = (Button)findViewById(R.id.bRun);
     }
 
 
@@ -20,4 +27,17 @@ public class MainActivity extends Activity {
         return true;
     }
     
+    public void onRunClick(View v)
+    {
+    	startService(new Intent(this, MailReceiver.class));
+    	bRun.setEnabled(false);
+    	bStop.setEnabled(true);
+    }
+    
+    public void onStopClick(View v)
+    {
+    	stopService(new Intent(this, MailReceiver.class));
+    	bRun.setEnabled(true);
+    	bStop.setEnabled(false);
+    }
 }

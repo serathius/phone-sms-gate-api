@@ -8,4 +8,26 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
+    <Button
+        android:id="@+id/bRun"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:onClick="onRunClick"
+        android:text="@string/b_run" />
+
+    <Button
+        android:id="@+id/bStop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/bRun"
+        android:layout_alignRight="@+id/bRun"
+        android:layout_below="@+id/bRun"
+        android:enabled="false"
+        android:onClick="onStopClick"
+        android:text="@string/b_stop" />
+
 </RelativeLayout>
