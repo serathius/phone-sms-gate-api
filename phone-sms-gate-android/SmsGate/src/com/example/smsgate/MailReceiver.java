@@ -11,7 +11,9 @@ import javax.mail.Store;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -27,6 +29,9 @@ public class MailReceiver extends Service {
 	/** Indicates and controls service's thread state */
 	boolean running = false;
 	
+	String serv_addr, serv_login, serv_pass;
+	int serv_port;
+	
 	@Override
 	public IBinder onBind(Intent arg0) {
 		return null;
@@ -35,6 +40,11 @@ public class MailReceiver extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());	
+		serv_addr = prefs.getString("serv_address", "");
+		serv_login = prefs.getString("serv_login", "");
+		serv_pass = prefs.getString("serv_pass", "");
+		serv_port = Integer.valueOf(prefs.getString("serv_port", ""));
 		Log.d(TAG, "MailReceiver service created");
 	}
 
@@ -52,7 +62,7 @@ public class MailReceiver extends Service {
 						
 					while (running) {
 						Log.i(TAG, "Lacze...");
-						store.connect("212.77.101.140",993,"login","pass"); //imap.wp.pl, login and pass to change
+						store.connect(serv_addr, serv_port, serv_login, serv_pass);
 						
 						Folder folder = store.getFolder("INBOX");
 						folder.open(Folder.READ_ONLY);
