@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceScreen android:key="conn_params" android:title="@string/conn_params">
+        <EditTextPreference android:title="@string/serv_address_str" android:key="serv_address"/>
+        <EditTextPreference android:title="@string/serv_port_str" android:key="serv_port" android:inputType = "number"/>
+        <EditTextPreference android:title="@string/serv_login_str" android:key="serv_login"/>
+        <EditTextPreference android:title="@string/serv_pass_str" android:key="serv_pass" android:password = "true" />   
+    </PreferenceScreen>
+    
+
+</PreferenceScreen>

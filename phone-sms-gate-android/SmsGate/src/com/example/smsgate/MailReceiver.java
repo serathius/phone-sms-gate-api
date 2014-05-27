@@ -2,6 +2,7 @@ package com.example.smsgate;
 
 import java.util.Properties;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
@@ -23,6 +24,7 @@ public class MailReceiver extends Service {
 	/** Arbitrary tag for logging purposes. */
 	static final String TAG = "MailReceiver";
 	
+	/** Indicates and controls service's thread state */
 	boolean running = false;
 	
 	@Override
@@ -40,6 +42,7 @@ public class MailReceiver extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(TAG, "MailReceiver service started");
 		running = true;
+		
 		new Thread() {
 			public void run() {
 				try {
@@ -58,11 +61,13 @@ public class MailReceiver extends Service {
 						Thread.sleep(5000);
 					}
 				} catch (NoSuchProviderException e) {
-					e.printStackTrace();
+					Log.e(TAG, "Problem z polaczeniem do serwera. Sprawdz ustawienia polaczenia");
+				} catch (AuthenticationFailedException e) {
+					Log.e(TAG, "Nieudane logowanie. Sprawdz login i haslo");
 				} catch (MessagingException e) {
-					e.printStackTrace();
+					Log.e(TAG, "Nieznany problem podczas polaczenia: ", e);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Log.d(TAG, "Thread sleep interrupted");
 				}
 			}
 		}.start();

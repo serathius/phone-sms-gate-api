@@ -25,6 +25,8 @@
             </intent-filter>
         </activity>
         
+        <activity android:name=".MainPrefsActivity"></activity>
+        
         <service android:name=".MailReceiver"></service>
     </application>
 
