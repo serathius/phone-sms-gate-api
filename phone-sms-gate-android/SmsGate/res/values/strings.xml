@@ -10,5 +10,7 @@
     <string name="serv_port_str">Port</string>
     <string name="serv_login_str">Nazwa użytkownika</string>
     <string name="serv_pass_str">Hasło</string>
+    <string name="serv_delay_str">Częstotliwość sprawdzania [sek]</string>
+    <string name="serv_delay_sum">Częstotliwość sprawdzania skrzynki, gdy serwer nie obsługuje IMAP IDLE</string>
 
 </resources>

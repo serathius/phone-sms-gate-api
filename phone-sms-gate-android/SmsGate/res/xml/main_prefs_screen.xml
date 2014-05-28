@@ -4,7 +4,9 @@
         <EditTextPreference android:title="@string/serv_address_str" android:key="serv_address"/>
         <EditTextPreference android:title="@string/serv_port_str" android:key="serv_port" android:inputType = "number"/>
         <EditTextPreference android:title="@string/serv_login_str" android:key="serv_login"/>
-        <EditTextPreference android:title="@string/serv_pass_str" android:key="serv_pass" android:password = "true" />   
+        <EditTextPreference android:title="@string/serv_pass_str" android:key="serv_pass" android:password = "true" />
+        <EditTextPreference android:key="serv_delay" android:summary="@string/serv_delay_sum" 
+            android:title="@string/serv_delay_str" android:inputType = "number"/>   
     </PreferenceScreen>
     
 

@@ -3,11 +3,19 @@ package com.example.smsgate;
 import java.util.Properties;
 
 import javax.mail.AuthenticationFailedException;
+import javax.mail.Flags;
+import javax.mail.Flags.Flag;
 import javax.mail.Folder;
+import javax.mail.FolderClosedException;
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Store;
+import javax.mail.event.MessageCountAdapter;
+import javax.mail.event.MessageCountEvent;
+import javax.mail.event.MessageCountListener;
+import javax.mail.search.FlagTerm;
 
 import android.app.Service;
 import android.content.Intent;
@@ -16,10 +24,10 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.sun.mail.imap.IMAPFolder;
+
 /**
  * E-mail receiving service.
- * 
- *
  */
 public class MailReceiver extends Service {
 	
@@ -29,8 +37,25 @@ public class MailReceiver extends Service {
 	/** Indicates and controls service's thread state */
 	boolean running = false;
 	
-	String serv_addr, serv_login, serv_pass;
-	int serv_port;
+	String 
+		/** IMAP server address */
+		serv_addr,
+		
+		/** Login to mailbox */
+		serv_login, 
+		
+		/** Password to mailbox */
+		serv_pass;
+	
+	int 
+		/** IMAP server port */
+		serv_port,
+		
+		/** Time between mailbox checks if server doesn't support IMAP IDLE */
+		serv_delay;
+	
+	/** Listener which reacts on changes of messages count */
+	MessageCountListener msgListener;
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -44,7 +69,8 @@ public class MailReceiver extends Service {
 		serv_addr = prefs.getString("serv_address", "");
 		serv_login = prefs.getString("serv_login", "");
 		serv_pass = prefs.getString("serv_pass", "");
-		serv_port = Integer.valueOf(prefs.getString("serv_port", ""));
+		serv_port = Integer.valueOf(prefs.getString("serv_port", "993"));
+		serv_delay = Integer.valueOf(prefs.getString("serv_delay", "5"));
 		Log.d(TAG, "MailReceiver service created");
 	}
 
@@ -60,16 +86,59 @@ public class MailReceiver extends Service {
 					Session session = Session.getInstance(props);
 					Store store = session.getStore("imaps");
 						
-					while (running) {
 						Log.i(TAG, "Lacze...");
 						store.connect(serv_addr, serv_port, serv_login, serv_pass);
+						Log.i(TAG, "Polaczony");
 						
 						Folder folder = store.getFolder("INBOX");
+						if (folder == null || !folder.exists()) {
+							Log.e(TAG, "Folder nie istnieje na serwerze! Koncze usluge");
+							running = false;
+							return;
+						}
+
 						folder.open(Folder.READ_ONLY);
-						Log.i(TAG,"Nowych wiadomosci: "+folder.getNewMessageCount());
-						store.close();
-						Thread.sleep(5000);
-					}
+						Log.i(TAG, "Folder otwarty, nasluchuje nowych wiadomosci");
+						msgListener = new MsgCountListener();
+					    folder.addMessageCountListener(msgListener);
+						
+					    // Manually notify MessageCountListener if any new message was on the mailbox
+					    // before server had chance to tell us (e.g. before connection)
+						if (folder.getUnreadMessageCount() != 0)
+						{
+							Message messages[] = folder.search(new FlagTerm(new Flags(Flag.SEEN), false));
+							msgListener.messagesAdded(new MessageCountEvent(folder, MessageCountEvent.ADDED, false, messages));
+						}
+						
+						// Check for new messages (periodically or using IDLE)
+					    boolean supportsIdle = false;
+					    try {
+							if (folder instanceof IMAPFolder) {
+							    IMAPFolder f = (IMAPFolder)folder;
+							    f.idle();
+							    supportsIdle = true;
+							}
+					    } catch (FolderClosedException fex) {
+					    	throw fex;
+					    } catch (MessagingException mex) {
+					    	supportsIdle = false;
+					    	Log.d(TAG, "IMAP IDLE not supported by server");
+					    }
+					    while(running) {
+							if (supportsIdle && folder instanceof IMAPFolder) {
+							    IMAPFolder f = (IMAPFolder)folder;
+							    f.idle();
+							    Log.d(TAG, "IDLE done");
+							} else {
+							    Thread.sleep(serv_delay*1000);
+	
+							    // This is to force the IMAP server to send us
+							    // EXISTS notifications. 
+							    folder.getMessageCount();
+							    Log.d(TAG, "Refreshed message count");
+							}
+					    }
+					    
 				} catch (NoSuchProviderException e) {
 					Log.e(TAG, "Problem z polaczeniem do serwera. Sprawdz ustawienia polaczenia");
 				} catch (AuthenticationFailedException e) {
@@ -89,5 +158,18 @@ public class MailReceiver extends Service {
 		super.onDestroy();
 		running = false;
 		Log.d(TAG, "MailReceiver service destroyed");
+	}
+}
+
+
+class MsgCountListener extends MessageCountAdapter
+{
+	public void messagesAdded(MessageCountEvent ev) {
+	    Message[] msgs = ev.getMessages();
+	    Log.i(MailReceiver.TAG,"Nowych wiadomosci: "+msgs.length);
+	    
+	    // probably some code which reads new msgs and 
+	    // passes them higher
+	    
 	}
 }
