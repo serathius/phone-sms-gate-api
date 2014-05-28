@@ -37,7 +37,7 @@ public class MailReceiver extends Service {
 	/** Indicates and controls service's thread state */
 	boolean running = false;
 	
-	String 
+	private String 
 		/** IMAP server address */
 		serv_addr,
 		
@@ -47,7 +47,7 @@ public class MailReceiver extends Service {
 		/** Password to mailbox */
 		serv_pass;
 	
-	int 
+	private int 
 		/** IMAP server port */
 		serv_port,
 		
@@ -55,7 +55,9 @@ public class MailReceiver extends Service {
 		serv_delay;
 	
 	/** Listener which reacts on changes of messages count */
-	MessageCountListener msgListener;
+	private MessageCountListener msgListener;
+	
+	private Folder folder;
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -90,13 +92,13 @@ public class MailReceiver extends Service {
 						store.connect(serv_addr, serv_port, serv_login, serv_pass);
 						Log.i(TAG, "Polaczony");
 						
-						Folder folder = store.getFolder("INBOX");
+						folder = store.getFolder("INBOX");
 						if (folder == null || !folder.exists()) {
 							Log.e(TAG, "Folder nie istnieje na serwerze! Koncze usluge");
 							running = false;
 							return;
 						}
-
+						
 						folder.open(Folder.READ_ONLY);
 						Log.i(TAG, "Folder otwarty, nasluchuje nowych wiadomosci");
 						msgListener = new MsgCountListener();
@@ -156,6 +158,17 @@ public class MailReceiver extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		new Thread() {
+			public void run() {
+				if (folder != null && folder.isOpen()) {
+					try {
+						folder.close(false);
+					} catch (MessagingException e) {
+						Log.e(TAG, "Problem podczas zamykania polaczenia: ", e);
+					}
+				}
+			}
+		}.start();
 		running = false;
 		Log.d(TAG, "MailReceiver service destroyed");
 	}
