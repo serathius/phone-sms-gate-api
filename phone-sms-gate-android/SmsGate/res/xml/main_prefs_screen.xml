@@ -8,6 +8,15 @@
         <EditTextPreference android:key="serv_delay" android:summary="@string/serv_delay_sum" 
             android:title="@string/serv_delay_str" android:inputType = "number"/>   
     </PreferenceScreen>
+    <CheckBoxPreference android:summary="@string/check_contact_list_sum" android:key="check_contact_list" 
+        android:title="@string/check_contact_list_str"/>
+    <Preference android:title="@string/edit_contact_list_str" android:key="edit_contact_list">
+    	<intent 
+        android:action="android.intent.action.VIEW"
+        android:targetPackage="com.example.smsgate"
+        android:targetClass="com.example.smsgate.EditContactsListActivity"
+    />
+    </Preference>
     
 
 </PreferenceScreen>

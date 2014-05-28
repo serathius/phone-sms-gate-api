@@ -12,5 +12,8 @@
     <string name="serv_pass_str">Hasło</string>
     <string name="serv_delay_str">Częstotliwość sprawdzania [sek]</string>
     <string name="serv_delay_sum">Częstotliwość sprawdzania skrzynki, gdy serwer nie obsługuje IMAP IDLE</string>
+    <string name="check_contact_list_str">Użyj własnej listy kontaktów</string>
+    <string name="check_contact_list_sum">Zaznacz, aby zamiast systemowej listy kontaktów wykorzystać własną</string>
+    <string name="edit_contact_list_str">Edytuj własną listę kontaktów</string>
 
 </resources>
