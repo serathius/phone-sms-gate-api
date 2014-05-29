@@ -164,7 +164,7 @@ public class MailReceiver extends Service {
 					try {
 						folder.close(false);
 					} catch (MessagingException e) {
-						Log.e(TAG, "Problem podczas zamykania polaczenia: ", e);
+						Log.e(TAG, "Problem podczas zatrzymywania uslugi: ", e);
 					}
 				}
 			}

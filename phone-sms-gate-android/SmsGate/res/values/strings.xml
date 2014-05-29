@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Sms gate</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Ustawienia</string>
     <string name="b_run">Uruchom usługę</string>
     <string name="b_stop">Zatrzymaj usługę</string>
     <string name="conn_params">Parametry połączenia</string>
@@ -15,5 +15,6 @@
     <string name="check_contact_list_str">Użyj własnej listy kontaktów</string>
     <string name="check_contact_list_sum">Zaznacz, aby zamiast systemowej listy kontaktów wykorzystać własną</string>
     <string name="edit_contact_list_str">Edytuj własną listę kontaktów</string>
+    <string name="contacts_list_add_str">Dodaj</string>
 
 </resources>
