@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/contacts_list_add" android:title="@string/contacts_list_add_str" 
+        android:icon="@drawable/ic_menu_btn_add" android:showAsAction="ifRoom"></item>
+    
+
+</menu>
