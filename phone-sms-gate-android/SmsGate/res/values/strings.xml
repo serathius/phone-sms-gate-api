@@ -16,5 +16,11 @@
     <string name="check_contact_list_sum">Zaznacz, aby zamiast systemowej listy kontaktów wykorzystać własną</string>
     <string name="edit_contact_list_str">Edytuj własną listę kontaktów</string>
     <string name="contacts_list_add_str">Dodaj</string>
+    <string name="edit_contacts_dlg_name">Nazwa</string>
+    <string name="edit_contacts_dlg_no">Numer telefonu</string>
+    <string name="edit_contacts_dlg_ok">Dodaj</string>
+    <string name="edit_contacts_dlg_cancel">Anuluj</string>
+    <string name="edit_contacts_dlg_add_header">Dodaj kontakt</string>
+    <string name="edit_contacts_dlg_edit_header">Edytuj kontakt</string>
 
 </resources>
