@@ -28,13 +28,26 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+/**
+ * Simple class representing one contact - pair consisted
+ *  of name and phone number.
+ */
 class Contact
 {
+	/** Name of contact */
 	String name;
+	
+	/** Phone number of contact */
 	String phoneNumber;
 	
+	/** Default constructor, sets both fields to empty string */
 	Contact() { name = ""; phoneNumber = ""; }
 	
+	/**
+	 * Constructor of Contact objects
+	 * @param name Name of contact
+	 * @param phoneNumber Phone number of contact
+	 */
 	Contact(String name, String phoneNumber) {
 		this.name = name;
 		this.phoneNumber = phoneNumber;
@@ -45,17 +58,25 @@ class Contact
 		return name + ", " + phoneNumber;
 	}
 	
-	
 }
 
+/**
+ * Class representing Android's activity used to modify contacts list
+ */
 public class EditContactsListActivity extends Activity {
 
+	/** Tag used for logging purposes */
 	static final String TAG = "EditContactsActivity";
+	
 	static final int ID_EDIT = 1;
 	static final int ID_DELETE = 2;
 	
+	/** List of contacts */ 
 	Vector<Contact> values;
-	ArrayAdapter<Contact> aa;
+	
+	protected ArrayAdapter<Contact> aa;
+	
+	/** Position of currently edited element on the list of contacts */
 	int currEditedItemPos;
 	
 	@Override
@@ -89,6 +110,8 @@ public class EditContactsListActivity extends Activity {
 		switch(item.getItemId())
 		{
 		case ID_EDIT:
+			
+			// Prepare and show edit item dialog
 			
 			LayoutInflater inflater = getLayoutInflater();
         	View v = inflater.inflate(R.layout.edit_contacts_dlg, null);
@@ -128,15 +151,20 @@ public class EditContactsListActivity extends Activity {
 			
 			return true;
 		case ID_DELETE:
+			
+			// Remove element from list
+			
 			values.remove(currEditedItemPos);
 			aa.notifyDataSetChanged();
+			
 			Toast.makeText(this, "Deleted", Toast.LENGTH_LONG).show();
 			currEditedItemPos = -1;
+			
 			return true;
 		default:
-			Toast.makeText(this, "none", Toast.LENGTH_LONG).show();
+			return super.onContextItemSelected(item);
 		}
-		return super.onContextItemSelected(item);
+		
 	}
 
 	@Override
@@ -195,6 +223,9 @@ public class EditContactsListActivity extends Activity {
 	    // Handle presses on the action bar items
 	    switch (item.getItemId()) {
 	        case R.id.contacts_list_add:
+	        	
+	        	// Prepare and show add item dialog
+	        	
 	        	LayoutInflater inflater = getLayoutInflater();
 	        	View v = inflater.inflate(R.layout.edit_contacts_dlg, null);
 	        	AlertDialog.Builder builder = new AlertDialog.Builder(this);
