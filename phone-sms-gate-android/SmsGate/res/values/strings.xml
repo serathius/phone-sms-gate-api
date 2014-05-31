@@ -18,9 +18,11 @@
     <string name="contacts_list_add_str">Dodaj</string>
     <string name="edit_contacts_dlg_name">Nazwa</string>
     <string name="edit_contacts_dlg_no">Numer telefonu</string>
-    <string name="edit_contacts_dlg_ok">Dodaj</string>
+    <string name="edit_contacts_dlg_ok">Zapisz</string>
     <string name="edit_contacts_dlg_cancel">Anuluj</string>
     <string name="edit_contacts_dlg_add_header">Dodaj kontakt</string>
     <string name="edit_contacts_dlg_edit_header">Edytuj kontakt</string>
+    <string name="edit_contacts_menu_edit">Edytuj</string>
+    <string name="edit_contacts_menu_delete">Usuń</string>
 
 </resources>
