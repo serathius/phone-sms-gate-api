@@ -5,11 +5,13 @@ TEST_OBJECTS = $(TESTS:.cpp=.o)
 SOURCES = $(wildcard src/*.cpp)
 OBJECTS = $(SOURCES:.cpp=.o)
 CFLAGS = -std=c++11
+LDFLAGS = -L/usr/local/lib
+LDLIBS = -lcrypto -lssl
 EXEC = bin/phone-sms-gate-api
 	
 $(EXEC) : $(OBJECTS)
 	mkdir -p bin
-	@g++ $(OBJECTS) -o $(EXEC)
+	@g++ $(LDFLAGS) $(OBJECTS) -o $(EXEC) $(LDLIBS)
 
 %.o: %.cpp
 	@g++ $(CFLAGS) -c $< -o $@
