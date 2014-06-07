@@ -2,8 +2,27 @@
 <resources>
 
     <string name="app_name">Sms gate</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Ustawienia</string>
     <string name="b_run">Uruchom usługę</string>
     <string name="b_stop">Zatrzymaj usługę</string>
+    <string name="conn_params">Parametry połączenia</string>
+    <string name="serv_address_str">Adres serwera pocztowego</string>
+    <string name="serv_port_str">Port</string>
+    <string name="serv_login_str">Nazwa użytkownika</string>
+    <string name="serv_pass_str">Hasło</string>
+    <string name="serv_delay_str">Częstotliwość sprawdzania [sek]</string>
+    <string name="serv_delay_sum">Częstotliwość sprawdzania skrzynki, gdy serwer nie obsługuje IMAP IDLE</string>
+    <string name="check_contact_list_str">Użyj własnej listy kontaktów</string>
+    <string name="check_contact_list_sum">Zaznacz, aby zamiast systemowej listy kontaktów wykorzystać własną</string>
+    <string name="edit_contact_list_str">Edytuj własną listę kontaktów</string>
+    <string name="contacts_list_add_str">Dodaj</string>
+    <string name="edit_contacts_dlg_name">Nazwa</string>
+    <string name="edit_contacts_dlg_no">Numer telefonu</string>
+    <string name="edit_contacts_dlg_ok">Zapisz</string>
+    <string name="edit_contacts_dlg_cancel">Anuluj</string>
+    <string name="edit_contacts_dlg_add_header">Dodaj kontakt</string>
+    <string name="edit_contacts_dlg_edit_header">Edytuj kontakt</string>
+    <string name="edit_contacts_menu_edit">Edytuj</string>
+    <string name="edit_contacts_menu_delete">Usuń</string>
 
 </resources>
