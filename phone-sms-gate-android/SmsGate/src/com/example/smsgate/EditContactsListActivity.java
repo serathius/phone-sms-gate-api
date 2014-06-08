@@ -44,7 +44,7 @@ public class EditContactsListActivity extends Activity {
 		setContentView(R.layout.activity_contacts_list_edit);
 
 		ListView lv = (ListView)findViewById(R.id.contactsList);
-		values = ContactsManager.getInstance(this).myContacts;
+		values = ContactsManager.getInstance().myContacts;
 		aa = new ArrayAdapter<Contact>(this, android.R.layout.simple_list_item_1, values);
 		lv.setAdapter(aa);
 		currEditedItemPos = -1;
@@ -134,7 +134,7 @@ public class EditContactsListActivity extends Activity {
 
 	@Override
 	protected void onStop() {
-		ContactsManager.getInstance(this).updateMyContacts();
+		ContactsManager.getInstance().updateMyContacts();
 		super.onStop();
 	}
 

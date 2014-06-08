@@ -62,8 +62,7 @@ public class ContactsManager {
 	/** List of android contacts */
 	Vector <Contact> androidContacts;
     
-    public static synchronized ContactsManager getInstance(Context context) {
-    	ContactsManager.context = context.getApplicationContext();
+    public static synchronized ContactsManager getInstance() {
     	if(cm == null){
             cm = new ContactsManager();
         }
@@ -75,6 +74,10 @@ public class ContactsManager {
     	androidContacts = new Vector<Contact>();
     	readMyContacts();
     	readAndroidContacts();
+    }
+    
+    public static void init(Context context) {
+    	ContactsManager.context = context.getApplicationContext();
     }
     
     private void readMyContacts() {
