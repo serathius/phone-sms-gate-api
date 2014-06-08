@@ -1,6 +1,8 @@
 package com.example.smsgate;
 
+import javax.mail.Address;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 
 import android.util.Log;
 import datamodel.SMS;
@@ -22,9 +24,16 @@ public class MessageManager {
 	
 	private void prepareAndSendMessageAsSMS(Message message) {
 		SMS createdSMS = mailParser.createSMSWithMailMessage(message);
-		if (createdSMS != null) {
+		Address responseAddress = null;
+		try {
+			responseAddress = message.getFrom()[0];
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		
+		if (createdSMS != null && responseAddress != null) {
 		SMSSender sender = new SMSSender();
-		sender.sendSMS(createdSMS);
+		sender.sendSMSWithResponseAddress(createdSMS, responseAddress);
 		}
 	}
 }
