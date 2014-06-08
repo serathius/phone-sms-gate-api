@@ -30,7 +30,7 @@ import com.sun.mail.imap.IMAPFolder;
  * E-mail receiving service.
  */
 public class MailReceiver extends Service {
-	
+
 	/** Arbitrary tag for logging purposes. */
 	static final String TAG = "MailReceiver";
 	
@@ -172,6 +172,7 @@ public class MailReceiver extends Service {
 		running = false;
 		Log.d(TAG, "MailReceiver service destroyed");
 	}
+	
 }
 
 
