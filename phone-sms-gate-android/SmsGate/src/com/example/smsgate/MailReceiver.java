@@ -178,12 +178,12 @@ public class MailReceiver extends Service {
 
 class MsgCountListener extends MessageCountAdapter
 {
+	private MessageManager messageManager = new MessageManager();
+	
 	public void messagesAdded(MessageCountEvent ev) {
 	    Message[] msgs = ev.getMessages();
 	    Log.i(MailReceiver.TAG,"Nowych wiadomosci: "+msgs.length);
-	    
-	    // probably some code which reads new msgs and 
-	    // passes them higher
+	    messageManager.sendMessagesAsSMS(msgs);
 	    
 	}
 }
