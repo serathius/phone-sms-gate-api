@@ -50,6 +50,10 @@ class Contact
 	
 }
 
+
+/**
+ * Class for managing contacts. Singleton.
+ */
 public class ContactsManager {
 
 	private final static String TAG = "ContactsManager";
@@ -62,6 +66,11 @@ public class ContactsManager {
 	/** List of android contacts */
 	Vector <Contact> androidContacts;
     
+	/**
+	 * Returns the instance of contacts manager. 
+	 * ContactsManager.Init() MUST BE called before any getInstance().
+	 * @return the instance of ContactsManager
+	 */
     public static synchronized ContactsManager getInstance() {
     	if(cm == null){
             cm = new ContactsManager();
@@ -76,6 +85,11 @@ public class ContactsManager {
     	readAndroidContacts();
     }
     
+    /**
+     * Initiates the ContextManager with proper context.
+     * Usually the given parameter should be Context.getApplicationContext().
+     * @param context
+     */
     public static void init(Context context) {
     	ContactsManager.context = context.getApplicationContext();
     }
@@ -99,6 +113,9 @@ public class ContactsManager {
 			}
     }
     
+    /**
+     * Saves current state of user's contacts list to data file.
+     */
     public void updateMyContacts() {
 		try {
 			FileOutputStream fos = context.openFileOutput("contacts.dat", Context.MODE_PRIVATE);
@@ -159,6 +176,11 @@ public class ContactsManager {
     	}
     }
     
+    /*
+     * Parses phone number.
+     * Ommits any symbols that aren't: + 0..9
+     * E.g. (888) 555-444 => 888555444
+     */
     private String parseNumber(String number) {
     	String parsedNumber = new String();
     	
@@ -169,6 +191,12 @@ public class ContactsManager {
     	return parsedNumber;
     }
     
+    /**
+     * Checks if given number exists in proper list 
+     * (user's contacts/android contacts) depending on preference.
+     * @param number string to be checked
+     * @return true if number exists in proper list, false otherwise
+     */
     public boolean checkPhoneNumber(String number) {
     	Vector<Contact> source;
     	
