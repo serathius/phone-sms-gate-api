@@ -172,6 +172,7 @@ public class MailReceiver extends Service {
 		running = false;
 		Log.d(TAG, "MailReceiver service destroyed");
 	}
+	
 }
 
 
