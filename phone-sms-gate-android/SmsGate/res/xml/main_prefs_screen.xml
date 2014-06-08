@@ -9,7 +9,7 @@
             android:title="@string/serv_delay_str" android:inputType = "number"/>   
     </PreferenceScreen>
     <CheckBoxPreference android:summary="@string/check_contact_list_sum" android:key="check_contact_list" 
-        android:title="@string/check_contact_list_str"/>
+        android:title="@string/check_contact_list_str" android:defaultValue="true"/>
     <Preference android:title="@string/edit_contact_list_str" android:key="edit_contact_list">
     	<intent 
         android:action="android.intent.action.VIEW"
