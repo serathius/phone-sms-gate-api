@@ -7,7 +7,7 @@ int main(int argc, char** argv)
     {
         EmailSMSClient emc = EmailSMSClient(&m);
         std::string author = "Tester";
-        std::string recipient = "756789213";
+        std::string recipient = "756789213"; // phone number
         std::string subject = "SMS-GATE";
         std::string text = "This is test message body.\nThis is test message body.\n";
         std::string loc = "1"; // national

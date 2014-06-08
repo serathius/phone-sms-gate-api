@@ -257,8 +257,8 @@ void MailConnection::Send(std::string author, std::string recipient, std::string
 
     unsigned char hash[20];
     char hexstring[41];
-    char timestamp[100];
-    snprintf(timestamp, 100, "%d", time(NULL));
+    char timestamp[20];
+    snprintf(timestamp, 20, "%d", time(NULL));
     char temp[80];
     strcpy(temp, body.c_str());
     strcpy(temp, timestamp);
