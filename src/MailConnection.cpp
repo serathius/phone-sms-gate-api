@@ -1,7 +1,7 @@
 #include "MailConnection.h"
 
-MailConnection::MailConnection(std::string address, std::string login, std::string password, int port/* = 0*/)
-    : _address(address), _port(port), valid(true), _sock(0), conn(nullptr), originalLogin(login)
+MailConnection::MailConnection(std::string address, std::string login, std::string password, int type, int port/* = 465*/)
+    : _address(address), _type(type), _port(port), valid(true), _sock(0), conn(nullptr), originalLogin(login), originalPass(password)
 {
     // convert login and password to base64 encoding
     _login = base64_encode(reinterpret_cast<const unsigned char*>(login.c_str()),login.size());
@@ -198,35 +198,46 @@ void MailConnection::sslWrite(const char *text)
 
 int MailConnection::authenticate()
 {
-    std::cout << "x\n";
     char buffer[BUFSIZE];
     std::string response;
 
     response = sslRead();
     std::cout << response;
+    if (_type == TYPE_SMTP)
+    {
+        sslWrite(("ehlo "+_address+"\r\n").c_str());
+        response = sslRead();
+        std::cout << response;
 
-    sslWrite(("ehlo "+_address+"\r\n").c_str());
-    response = sslRead();
-    std::cout << response;
+        sslWrite("AUTH LOGIN\r\n");
+        response = sslRead();
+        std::cout << response;
 
-	sslWrite("AUTH LOGIN\r\n");
-	response = sslRead();
-	std::cout << response;
+        sslWrite((_login+"\r\n").c_str());
+        response = sslRead();
+        std::cout << response;
 
-	sslWrite((_login+"\r\n").c_str());
-	response = sslRead();
-	std::cout << response;
+        sslWrite((_password+"\r\n").c_str());
+        response = sslRead();
+        std::cout << response;
 
-	sslWrite((_password+"\r\n").c_str());
-	response = sslRead();
-	std::cout << response;
+        if (response.compare("235 2.7.0 Accepted\r\n") == 0)
+            return 1;
+        return 0;
+    }
+    if (_type == TYPE_POP3)
+    {
+        sslWrite(("user "+originalLogin+"\r\n").c_str());
+        response = sslRead();
+        std::cout << response;
 
-	if (response.compare("235 2.7.0 Accepted\r\n") == 0)
-        return 1;
-    return 0;
+        sslWrite(("pass "+originalPass+"\r\n").c_str());
+        response = sslRead();
+        std::cout << response << std::endl;
+    }
 }
 
-void MailConnection::Send(std::string author, std::string recipient, std::string subject, std::string body)
+void MailConnection::Send(std::string author, std::string recipient, std::string subject, std::string body, std::string loc)
 {
     std::string response;
 
@@ -236,7 +247,7 @@ void MailConnection::Send(std::string author, std::string recipient, std::string
 	std::cout << response;
 
     // recipient
-	sslWrite(("RCPT TO: <" + recipient + ">\r\n").c_str());
+	sslWrite(("RCPT TO: <phonesmsgateapi@gmail.com>\r\n"));
 	response = sslRead();
 	std::cout << response;
 
@@ -244,13 +255,30 @@ void MailConnection::Send(std::string author, std::string recipient, std::string
     response = sslRead();
     std::cout << response;
 
-    // email text
+    unsigned char hash[20];
+    char hexstring[41];
+    char timestamp[100];
+    snprintf(timestamp, 100, "%d", time(NULL));
+    char temp[80];
+    strcpy(temp, body.c_str());
+    strcpy(temp, timestamp);
+    sha1::calc(temp, sizeof(temp), hash);
+    sha1::toHexString(hash, hexstring);
     std::string _body;
     _body  = "From: " + author + " <" + originalLogin + ">"
 	   "\nSubject: " + subject +
-	   "\nTo: <" + recipient + ">"
-	   "\n\n" + body;
+	   "\nTo: <phonesmsgateapi@gmail.com>"
+	   "\n\n" + hexstring + "\n" + timestamp + "\n" + recipient + "\n" + loc + "\n" + body;
 
 	sslWrite(_body.c_str());
 	sslWrite("\r\n.\r\n");
+}
+
+void MailConnection::Receive()
+{
+    // @todo
+    std::string response;
+    sslWrite("RETR 1\r\n");
+	response = sslRead();
+	std::cout << response;
 }
