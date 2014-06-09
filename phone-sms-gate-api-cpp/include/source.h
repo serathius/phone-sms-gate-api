@@ -8,8 +8,8 @@
 class TextPos
 {
 public:
-    int line; // line in string
-    int pos; // position in line
+    int line;   // line in string
+    int pos;    // position in line
     TextPos(int l = 0, int p = 0) : line(l), pos(p) { }
 };
 
@@ -19,15 +19,18 @@ class Source
 
     TextPos tpos;
 
-    bool NextLine(); // get next line from str
-    std::string line; // current line
+    bool NextLine();    // get next line from str
+    std::string line;   // current line
 
 public:
     Source(std::stringstream& content);
     ~Source();
-    int NextChar(); // next char from input
+    /* Returns next char from file / stream. Whitespaces are ignored. */
+    int NextChar();
+    /* Rewinds text pointer. Cant change line though */
     void back(int size) { tpos.pos = (tpos.pos > size ? tpos.pos - size : 0); }
-    const TextPos& GetPos() const { return tpos; } // position in stringstream
+    /* Returns current position in text */
+    const TextPos& GetPos() const { return tpos; }
 };
 
 #endif // SOURCE_H

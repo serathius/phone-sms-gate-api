@@ -36,7 +36,7 @@ int MailConnection::tcpConnect()
     // handle errors
     if (_sock == -1)
     {
-        std::cout << "Cannot create socket!" << std::endl;
+        std::cerr << "Cannot create socket!" << std::endl;
         return 0;
     }
 
@@ -50,7 +50,7 @@ int MailConnection::tcpConnect()
     // handle incorrect host name
     if (host == static_cast<struct hostent*>(0))
     {
-        std::cout << "Unknown host: " << _address << std::endl;
+        std::cerr << "Unknown host: " << _address << std::endl;
         return 0;
     }
 
@@ -64,7 +64,7 @@ int MailConnection::tcpConnect()
     result = connect(_sock, reinterpret_cast<struct sockaddr*>(&server), sizeof(struct sockaddr_in));
     while (result == -1)
     {
-        std::cout << "Cannot connect to host: " << _address << std::endl;
+        std::cerr << "Cannot connect to host: " << _address << std::endl;
         if (--counter >= 0)
         {
             std::cout << "Trying again..." << std::endl;
@@ -137,6 +137,7 @@ int MailConnection::sslConnect()
 
 void MailConnection::CloseConnection()
 {
+    valid = false;
     if (conn)
         sslDisconnect();
 }
@@ -145,12 +146,11 @@ void MailConnection::sslDisconnect()
 {
     if (!conn)
         return;
-
+    // close tcp connection
     std::string response;
     sslWrite("quit\r\n");
 	response = sslRead();
-	std::cout << response;
-
+    // and free ssl connection
     if (conn->socket)
         close(conn->socket);
     if (conn->sslHandle)
@@ -183,7 +183,7 @@ std::string MailConnection::sslRead()
 
             if (received > 0)
                 result += buffer;
-
+            // buffer is not full, so there is nothing more to read
             if (received < BUFSIZE)
                 break;
             count++;
@@ -203,44 +203,50 @@ int MailConnection::authenticate()
 {
     char buffer[BUFSIZE];
     std::string response;
-
     response = sslRead();
     std::cout << response;
     if (_type == TYPE_SMTP)
     {
+        // say hello
         sslWrite(("ehlo "+_address+"\r\n").c_str());
         response = sslRead();
         std::cout << response;
 
+        // start login
         sslWrite("AUTH LOGIN\r\n");
         response = sslRead();
         std::cout << response;
 
+        // send encoded login through ssl
         sslWrite((_login+"\r\n").c_str());
         response = sslRead();
         std::cout << response;
 
+        // send encoded password through ssl
         sslWrite((_password+"\r\n").c_str());
         response = sslRead();
         std::cout << response;
 
+        // check if we are accepted
         if (response.compare("235 2.7.0 Accepted\r\n") == 0)
             return 1;
         return 0;
     }
     if (_type == TYPE_POP3)
     {
+        // send non encoded login through ssl
         sslWrite(("user "+originalLogin+"\r\n").c_str());
         response = sslRead();
         std::cout << response;
 
+        // send non encoded password through ssl
         sslWrite(("pass "+originalPass+"\r\n").c_str());
         response = sslRead();
         std::cout << response << std::endl;
     }
 }
 
-void MailConnection::Send(std::string author, std::string recipient, std::string subject, std::string body, std::string loc)
+std::string MailConnection::Send(std::string author, std::string recipient, std::string subject, std::string body, std::string loc)
 {
     std::string response;
 
@@ -254,19 +260,25 @@ void MailConnection::Send(std::string author, std::string recipient, std::string
 	response = sslRead();
 	std::cout << response;
 
+    // mail body
 	sslWrite("DATA\r\n");
     response = sslRead();
     std::cout << response;
 
+    // check timestamp and calculate hash
     unsigned char hash[20];
     char hexstring[41];
     char timestamp[20];
     snprintf(timestamp, 20, "%d", time(NULL));
     char temp[80];
+    // include timestamp to hash value
     strcpy(temp, body.c_str());
     strcpy(temp, timestamp);
+    // calc hash
     sha1::calc(temp, sizeof(temp), hash);
+    // convert to string
     sha1::toHexString(hash, hexstring);
+    // concatenate body of the email
     std::string _body;
     _body  = "From: " + author + " <" + originalLogin + ">"
 	   "\nSubject: " + subject +
@@ -275,25 +287,55 @@ void MailConnection::Send(std::string author, std::string recipient, std::string
 
 	sslWrite(_body.c_str());
 	sslWrite("\r\n.\r\n");
+	// return sha1 code of sent message
+	return hexstring;
 }
 
-void MailConnection::Receive()
+void MailConnection::Update()
 {
-    // @todo
     std::string response;
-    sslWrite("RETR 1\r\n");
-    response = sslRead();
-    std::cout << response << std::endl;
+    std::ofstream ofs;
+    do
+    {
+        // get first email
+        sslWrite("RETR 1\r\n");
+        response = sslRead();
+        std::stringstream ss;
+        ss.clear();
+        ss.str(response);
 
-    std::stringstream ss;
-    ss.clear();
-    ss.str(response);
+        // extract sha1 identifier and return code from message
+        Source src = Source(ss);
+        Scanner scan = Scanner(src);
+        Parser prs = Parser(scan);
+        Result result = prs.Analyze();
+        // we dont get any sha code, so email is wrong
+        if (!result.sha.size())
+            break;
+        // write sha and error to the end of log file
+        ofs.open("log.txt", std::ios::app);
+        ofs << result.sha << " " << result.code << "\n";
+        ofs.close();
+        sslWrite("DELE 1\r\n");
+        response = sslRead();
+    }
+    while (true);
+}
 
-    // extract sha1 identifier and return code from message
-    Source src = Source(ss);
-    Scanner scan = Scanner(src);
-    Parser prs = Parser(scan);
-    Result result = prs.Analyze();
-    //std::cout << "Sha: " << result.sha << std::endl;
-    //std::cout << "Code: " << result.code << std::endl;
+std::string MailConnection::Check(std::string sha)
+{
+    std::ifstream ifs;
+    std::string buffer;
+    buffer.clear(); // clear just in case
+    ifs.open("log.txt");
+    do
+    {
+        getline(ifs, buffer);
+        // found given sha
+        if (sha.compare(buffer.substr(0, 40)) == 0)
+            return buffer.substr(41, buffer.size());
+    } while (buffer.size() > 2);
+    // send empty string if there is no confirmation
+    buffer.clear();
+    return buffer;
 }

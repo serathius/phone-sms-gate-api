@@ -30,10 +30,10 @@ void Parser::Message()
     accept(subjectsy);
     if (symbol == smsgatesy)
         accept(smsgatesy);
-    else return; // its not response mail
+    else return; // its not correct response mail
     if (symbol == replysy)
         accept(replysy);
-    else return; // its not response mail
+    else return; // its not correct response mail
     accept(tosy);
     Recipient();
     if (symbol == sha)
@@ -57,7 +57,8 @@ void Parser::Recipient()
 
 void Parser::HandleSyntaxError(Symbol symbol, Symbol expected)
 {
+    // we do not interrupt process here, its only information.
+    // Mail can be incorrect, so dont panic - just ignore it
     std::cout << "Syntax Error! Expected: " << expected << ", Read symbol: " << symbol << std::endl;
     std::cout << "Current spell: " << scan.Spell() << std::endl;
-    abort(); // @todo: find better way to handle syntax error (if any) :P
 }
