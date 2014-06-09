@@ -283,14 +283,14 @@ void MailConnection::Receive()
 	response = sslRead();
 	//std::cout << response << std::endl;
 
-	std::stringstream ss;
-	ss.clear();
-	ss.str(response);
+    std::stringstream ss;
+    ss.clear();
+    ss.str(response);
 
     // extract sha1 identifier and return code from message
-	Source src = Source(ss);
-	Scanner scan = Scanner(src);
-	Parser prs = Parser(scan);
+    Source src = Source(ss);
+    Scanner scan = Scanner(src);
+    Parser prs = Parser(scan);
     Result result = prs.Analyze();
     //std::cout << "Sha: " << result.sha << std::endl;
     //std::cout << "Code: " << result.code << std::endl;
