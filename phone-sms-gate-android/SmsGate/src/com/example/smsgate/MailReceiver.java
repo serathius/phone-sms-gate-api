@@ -30,7 +30,7 @@ import com.sun.mail.imap.IMAPFolder;
  * E-mail receiving service.
  */
 public class MailReceiver extends Service {
-	
+
 	/** Arbitrary tag for logging purposes. */
 	static final String TAG = "MailReceiver";
 	
@@ -74,6 +74,7 @@ public class MailReceiver extends Service {
 		serv_port = Integer.valueOf(prefs.getString("serv_port", "993"));
 		serv_delay = Integer.valueOf(prefs.getString("serv_delay", "5"));
 		Log.d(TAG, "MailReceiver service created");
+		ContactsManager.init(getApplicationContext());
 	}
 
 	@Override
@@ -172,6 +173,7 @@ public class MailReceiver extends Service {
 		running = false;
 		Log.d(TAG, "MailReceiver service destroyed");
 	}
+	
 }
 
 

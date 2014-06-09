@@ -6,7 +6,12 @@ import javax.mail.MessagingException;
 
 import android.util.Log;
 import datamodel.SMS;
-
+/**
+ * 
+ * Class responsible for handling and sending e-mail
+ * messages retrieved from mailbox
+ *
+ */
 public class MessageManager {
 	
 	private MailParser mailParser;
@@ -14,7 +19,11 @@ public class MessageManager {
 	public MessageManager() {
 		mailParser = new MailParser();
 	}
-
+	
+	/**
+	 * Method which take list of received e-mail and processes it
+	 * @param messages
+	 */
 	public void sendMessagesAsSMS(Message[] messages) {
 		mailParser = new MailParser();
 		for(Message msg : messages) {
@@ -22,18 +31,26 @@ public class MessageManager {
 		}
 	}
 	
+	/**
+	 * Method which prepares SMS basing on received email and sends it
+	 * @param message
+	 */
 	private void prepareAndSendMessageAsSMS(Message message) {
 		SMS createdSMS = mailParser.createSMSWithMailMessage(message);
-		Address responseAddress = null;
-		try {
-			responseAddress = message.getFrom()[0];
-		} catch (MessagingException e) {
-			e.printStackTrace();
-		}
-		
-		if (createdSMS != null && responseAddress != null) {
-		SMSSender sender = new SMSSender();
-		sender.sendSMSWithResponseAddress(createdSMS, responseAddress);
+
+		if (ContactsManager.getInstance().checkPhoneNumber(createdSMS.getRecipient())) {
+	
+			Address responseAddress = null;
+			try {
+				responseAddress = message.getFrom()[0];
+			} catch (MessagingException e) {
+				e.printStackTrace();
+			}
+			
+			if (createdSMS != null && responseAddress != null) {
+			SMSSender sender = new SMSSender();
+			sender.sendSMSWithResponseAddress(createdSMS, responseAddress);
+			}	
 		}
 	}
 }
