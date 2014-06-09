@@ -11,3 +11,4 @@ public class SmsGateApp extends Application{
 	}
 
 }
+
