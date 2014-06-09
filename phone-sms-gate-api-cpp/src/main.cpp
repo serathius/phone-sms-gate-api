@@ -8,12 +8,10 @@ int main(int argc, char** argv)
     if (m.isValid())
     {
         EmailSMSClient emc = EmailSMSClient(&m);
-        std::string author = "Tester";
         std::string recipient = "756789213"; // phone number
-        std::string subject = "SMS-GATE";
         std::string text = "Random text.";
         std::string loc = "1"; // national
-        sha = emc.Send(author, recipient, subject, text, loc);
+        sha = emc.Send(recipient, text, loc);
         emc.CloseConnection();
     }
     sleep(5);

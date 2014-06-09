@@ -5,8 +5,10 @@ EmailSMSClient::EmailSMSClient(MailConnection* mc) : _mc(mc)
 
 }
 
-std::string EmailSMSClient::Send(std::string author, std::string recipient, std::string subject, std::string body, std::string loc)
+std::string EmailSMSClient::Send(std::string recipient, std::string body, std::string loc)
 {
+    std::string author = "MailToSMS";
+    std::string subject = "SMS-GATE";
     std::string result;
     result.clear(); // clear just in case
     if (_mc->isValid())

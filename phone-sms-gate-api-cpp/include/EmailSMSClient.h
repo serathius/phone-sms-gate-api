@@ -10,7 +10,7 @@ public:
     /* Create EmailSMSClient over mail connection */
     EmailSMSClient(MailConnection* mc);
     /* Sends sms to given recipient */
-    std::string Send(std::string author, std::string recipient, std::string subject, std::string body, std::string loc);
+    std::string Send(std::string recipient, std::string body, std::string loc);
     /* Update replies from android application */
     void Update();
     /* Check if we have confirmation of message with given sha code */
