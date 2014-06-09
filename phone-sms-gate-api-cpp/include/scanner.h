@@ -31,9 +31,10 @@ enum Symbol
 class Scanner
 {
 private:
+    // this struct helps with keywords recognition
     struct KeyRec
     {
-        std::string keyword;
+        std::string keyword;        // keyword
         Symbol atom;                // lexical atom
     };
     static KeyRec keywordTable[NKEYS];
@@ -47,14 +48,22 @@ private:
         c = src.NextChar();
     }
 
+    /* Check if given string is Sha1 code */
     bool isSha(std::string s);
+    /* Check if given symbol is a number */
     bool isNumber(char c);
+    /* Check if given symbol is a hex number */
     bool isHexNumber(char c);
+    /* Check if given string is a return code from android application */
     bool isCode(std::string s);
+    /* rewind text pointer by given number of elements */
     void back(int size);
 public:
+    /* Create scanner and immediately get next char from source */
     Scanner(Source &s) : src(s) { Nextc(); }
+    /* Return next symbol from source file / stream */
     Symbol NextSymbol();
+    /* Return last symbol from stream */
     const std::string& Spell() { return spell; }
 };
 

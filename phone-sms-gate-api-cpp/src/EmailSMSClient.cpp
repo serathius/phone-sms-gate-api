@@ -5,14 +5,32 @@ EmailSMSClient::EmailSMSClient(MailConnection* mc) : _mc(mc)
 
 }
 
-void EmailSMSClient::Send(std::string author, std::string recipient, std::string subject, std::string body, std::string loc)
+std::string EmailSMSClient::Send(std::string author, std::string recipient, std::string subject, std::string body, std::string loc)
 {
+    std::string result;
+    result.clear(); // clear just in case
     if (_mc->isValid())
-        _mc->Send(author, recipient, subject, body, loc);
+        result = _mc->Send(author, recipient, subject, body, loc);
+    return result; // return empty string if there is no result
 }
 
-void EmailSMSClient::Receive()
+void EmailSMSClient::Update()
 {
     if (_mc->isValid())
-        _mc->Receive();
+        _mc->Update();
+}
+
+std::string EmailSMSClient::Check(std::string sha)
+{
+    std::string result;
+    result.clear(); // clear just in case
+    if (_mc->isValid())
+        result = _mc->Check(sha);
+    return result; // return empty string if there is no result
+}
+
+void EmailSMSClient::CloseConnection()
+{
+    if (_mc->isValid())
+        _mc->CloseConnection();
 }
