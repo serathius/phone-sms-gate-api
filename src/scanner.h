@@ -51,6 +51,7 @@ private:
     bool isNumber(char c);
     bool isHexNumber(char c);
     bool isCode(std::string s);
+    void back(int size);
 public:
     Scanner(Source &s) : src(s) { Nextc(); }
     Symbol NextSymbol();

@@ -177,7 +177,9 @@ std::string MailConnection::sslRead()
         while (true)
         {
             received = SSL_read(conn->sslHandle, buffer, BUFSIZE);
-            buffer[received] = '\0';
+
+            if (received < BUFSIZE)
+                buffer[received] = '\0';
 
             if (received > 0)
                 result += buffer;
@@ -281,7 +283,7 @@ void MailConnection::Receive()
     std::string response;
     sslWrite("RETR 1\r\n");
     response = sslRead();
-    //std::cout << response << std::endl;
+    std::cout << response << std::endl;
 
     std::stringstream ss;
     ss.clear();

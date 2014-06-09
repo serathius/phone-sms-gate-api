@@ -26,6 +26,7 @@ public:
     Source(std::stringstream& content);
     ~Source();
     int NextChar(); // next char from input
+    void back(int size) { tpos.pos = (tpos.pos > size ? tpos.pos - size : 0); }
     const TextPos& GetPos() const { return tpos; } // position in stringstream
 };
 
