@@ -137,6 +137,7 @@ public class EditContactsListActivity extends Activity {
 	@Override
 	protected void onStop() {
 
+
 		ContactsManager.getInstance().updateMyContacts();
 
 		super.onStop();
