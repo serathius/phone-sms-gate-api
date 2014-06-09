@@ -10,7 +10,6 @@ Source::Source(std::stringstream& content) : str(content)
 
 Source::~Source()
 {
-
 }
 
 bool Source::NextLine()

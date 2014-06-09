@@ -40,6 +40,7 @@ private:
 
     int c;                          // current source char
     std::string spell;              // last read identificator
+    Source& src;
 
     void Nextc()
     {
@@ -50,13 +51,9 @@ private:
     bool isNumber(char c);
     bool isHexNumber(char c);
     bool isCode(std::string s);
-    void back(int size);
 public:
-    Source& src;
-
     Scanner(Source &s) : src(s) { Nextc(); }
     Symbol NextSymbol();
-    bool skipLine();
     const std::string& Spell() { return spell; }
 };
 

@@ -48,11 +48,6 @@ bool Scanner::isCode(std::string s)
     return true;
 }
 
-void Scanner::back(int size)
-{
-    src.back(size);
-}
-
 Symbol Scanner::NextSymbol()
 {
     while (c > 255 || c < -1 || isspace(c))
@@ -119,11 +114,4 @@ Symbol Scanner::NextSymbol()
     }
     Nextc();
     return unknown;
-}
-
-bool Scanner::skipLine()
-{
-    bool result = src.skipLine();
-    Nextc();
-    return result;
 }
