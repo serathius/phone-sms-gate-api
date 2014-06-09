@@ -35,7 +35,7 @@ public class MailReceiver extends Service {
 	static final String TAG = "MailReceiver";
 	
 	/** Indicates and controls service's thread state */
-	boolean running = false;
+	private static boolean running = false;
 	
 	private String 
 		/** IMAP server address */
@@ -74,13 +74,13 @@ public class MailReceiver extends Service {
 		serv_port = Integer.valueOf(prefs.getString("serv_port", "993"));
 		serv_delay = Integer.valueOf(prefs.getString("serv_delay", "5"));
 		Log.d(TAG, "MailReceiver service created");
-		ContactsManager.init(getApplicationContext());
+		//ContactsManager.init(getApplicationContext());
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(TAG, "MailReceiver service started");
-		running = true;
+		setRunning(true);
 		
 		new Thread() {
 			public void run() {
@@ -96,11 +96,11 @@ public class MailReceiver extends Service {
 						folder = store.getFolder("INBOX");
 						if (folder == null || !folder.exists()) {
 							Log.e(TAG, "Folder nie istnieje na serwerze! Koncze usluge");
-							running = false;
+							setRunning(false);
 							return;
 						}
 						
-						folder.open(Folder.READ_ONLY);
+						folder.open(Folder.READ_WRITE); // WRITE to set SEEN flags
 						Log.i(TAG, "Folder otwarty, nasluchuje nowych wiadomosci");
 						msgListener = new MsgCountListener();
 					    folder.addMessageCountListener(msgListener);
@@ -127,7 +127,7 @@ public class MailReceiver extends Service {
 					    	supportsIdle = false;
 					    	Log.d(TAG, "IMAP IDLE not supported by server");
 					    }
-					    while(running) {
+					    while(isRunning()) {
 							if (supportsIdle && folder instanceof IMAPFolder) {
 							    IMAPFolder f = (IMAPFolder)folder;
 							    f.idle();
@@ -147,7 +147,7 @@ public class MailReceiver extends Service {
 				} catch (AuthenticationFailedException e) {
 					Log.e(TAG, "Nieudane logowanie. Sprawdz login i haslo");
 				} catch (MessagingException e) {
-					Log.e(TAG, "Nieznany problem podczas polaczenia: ", e);
+					Log.e(TAG, "Nieznany problem podczas polaczenia: " + e.getMessage());
 				} catch (InterruptedException e) {
 					Log.d(TAG, "Thread sleep interrupted");
 				}
@@ -165,13 +165,21 @@ public class MailReceiver extends Service {
 					try {
 						folder.close(false);
 					} catch (MessagingException e) {
-						Log.e(TAG, "Problem podczas zatrzymywania uslugi: ", e);
+						Log.e(TAG, "Problem podczas zatrzymywania uslugi: " + e.getMessage());
 					}
 				}
 			}
 		}.start();
-		running = false;
+		setRunning(false);
 		Log.d(TAG, "MailReceiver service destroyed");
+	}
+	
+	static synchronized boolean isRunning() {
+		return running;
+	}
+	
+	static synchronized void setRunning(boolean state) {
+		running = state;
 	}
 	
 }

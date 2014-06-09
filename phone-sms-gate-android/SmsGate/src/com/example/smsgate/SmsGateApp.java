@@ -8,6 +8,7 @@ public class SmsGateApp extends Application{
 	public void onCreate() {
 		super.onCreate();
 		ContactsManager.init(getApplicationContext());
+		ContactsManager.getInstance();
 	}
 
 }
