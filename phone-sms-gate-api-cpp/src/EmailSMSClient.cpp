@@ -1,4 +1,4 @@
-#include "EmailSMSClient.h"
+#include "../include/EmailSMSClient.h"
 
 EmailSMSClient::EmailSMSClient(MailConnection* mc) : _mc(mc)
 {

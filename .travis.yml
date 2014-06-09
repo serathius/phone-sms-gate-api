@@ -5,4 +5,6 @@ before_install:
 install:
   - sudo apt-get install -qq g++-4.8;
   - sudo apt-get install zip
-script: ./run_tests.sh
+script:
+  - cd phone-sms-gate-api-cpp 
+  - ./run_tests.sh

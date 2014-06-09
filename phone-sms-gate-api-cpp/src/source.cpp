@@ -1,4 +1,4 @@
-#include "source.h"
+#include "../include/source.h"
 
 Source::Source(std::stringstream& content) : str(content)
 {

@@ -1,5 +1,5 @@
-#include "MailConnection.h"
-#include "parser.h"
+#include "../include/MailConnection.h"
+#include "../include/parser.h"
 
 MailConnection::MailConnection(std::string address, std::string login, std::string password, int type, int port/* = 465*/)
     : _address(address), _type(type), _port(port), valid(true), _sock(0), conn(nullptr), originalLogin(login), originalPass(password)

@@ -1,4 +1,4 @@
-#include "EmailSMSClient.h"
+#include "../include/EmailSMSClient.h"
 
 int main(int argc, char** argv)
 {

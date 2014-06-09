@@ -21,11 +21,11 @@
 
    3. This notice may not be removed or altered from any source distribution.
 
-   René Nyffenegger rene.nyffenegger@adp-gmbh.ch
+   Renï¿½ Nyffenegger rene.nyffenegger@adp-gmbh.ch
 
 */
 
-#include "base64.h"
+#include "../include/base64.h"
 #include <iostream>
 
 static const std::string base64_chars =
