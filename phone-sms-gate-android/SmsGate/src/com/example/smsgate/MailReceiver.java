@@ -74,6 +74,7 @@ public class MailReceiver extends Service {
 		serv_port = Integer.valueOf(prefs.getString("serv_port", "993"));
 		serv_delay = Integer.valueOf(prefs.getString("serv_delay", "5"));
 		Log.d(TAG, "MailReceiver service created");
+		ContactsManager.init(getApplicationContext());
 	}
 
 	@Override
@@ -178,12 +179,12 @@ public class MailReceiver extends Service {
 
 class MsgCountListener extends MessageCountAdapter
 {
+	private MessageManager messageManager = new MessageManager();
+	
 	public void messagesAdded(MessageCountEvent ev) {
 	    Message[] msgs = ev.getMessages();
 	    Log.i(MailReceiver.TAG,"Nowych wiadomosci: "+msgs.length);
-	    
-	    // probably some code which reads new msgs and 
-	    // passes them higher
+	    messageManager.sendMessagesAsSMS(msgs);
 	    
 	}
 }
