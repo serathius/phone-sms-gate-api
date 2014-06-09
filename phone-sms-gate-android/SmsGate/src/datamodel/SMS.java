@@ -1,11 +1,24 @@
 package datamodel;
 
+/**
+ * Class representing SMS message
+ */
 public class SMS {
+
 	
+	/* Message identifier*/
 	private String id;
+	
+	/* Message timestamp*/
 	private String timestamp;
+	
+	/* Recipient phone number*/
 	private String recipient;
+	
+	/* Indicates if SMS message can contain national letters */
 	private boolean national;
+	
+	/* Body of the message*/
 	private String body;
 	
 	public SMS(String id, String timestamp, String recipient, boolean national,
