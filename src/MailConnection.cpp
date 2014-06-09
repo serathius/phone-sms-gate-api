@@ -280,8 +280,8 @@ void MailConnection::Receive()
     // @todo
     std::string response;
     sslWrite("RETR 1\r\n");
-	response = sslRead();
-	//std::cout << response << std::endl;
+    response = sslRead();
+    //std::cout << response << std::endl;
 
     std::stringstream ss;
     ss.clear();
