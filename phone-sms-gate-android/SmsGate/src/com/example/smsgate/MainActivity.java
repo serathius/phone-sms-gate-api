@@ -18,6 +18,15 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         bStop = (Button)findViewById(R.id.bStop);
         bRun = (Button)findViewById(R.id.bRun);
+        
+        if (MailReceiver.isRunning()) {
+        	bStop.setEnabled(true);
+        	bRun.setEnabled(false);
+        }
+        else {
+        	bStop.setEnabled(false);
+        	bRun.setEnabled(true);
+        }
     }
 
 

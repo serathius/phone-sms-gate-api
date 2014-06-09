@@ -199,17 +199,26 @@ public class ContactsManager {
      */
     public boolean checkPhoneNumber(String number) {
     	Vector<Contact> source;
-    	
+    	String properNumber = parseNumber(number);
     	SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
     	if (prefs.getBoolean("check_contact_list", true))
     		source = myContacts; // check for number in myContacts
     	else
     		source = androidContacts; // check for number in androidContacts
-    	
-    	for (Contact c: source)
-    	if (c.phoneNumber.equals(number))
-    		return true;
-    	
+
+    	for (Contact c: source) {
+    		String pn = c.phoneNumber;
+    		if (pn.equals(properNumber) == true){
+    			Log.d(TAG, "Found proper number");
+    			return true;
+    		}
+    		else
+    		{
+    			Log.d(TAG, "Not found proper number");
+    			continue;
+    		}
+    			
+    	}
     	return false;
     }
     
