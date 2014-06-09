@@ -1,4 +1,5 @@
 #include "MailConnection.h"
+#include "parser.h"
 
 MailConnection::MailConnection(std::string address, std::string login, std::string password, int type, int port/* = 465*/)
     : _address(address), _type(type), _port(port), valid(true), _sock(0), conn(nullptr), originalLogin(login), originalPass(password)
@@ -170,13 +171,15 @@ std::string MailConnection::sslRead()
     int received, count = 0;
     char buffer[BUFSIZE];
     std::string result;
-
+    result.clear();
     if (conn)
     {
         while (true)
         {
             received = SSL_read(conn->sslHandle, buffer, BUFSIZE);
-            buffer[received] = '\0';
+
+            if (received < BUFSIZE)
+                buffer[received] = '\0';
 
             if (received > 0)
                 result += buffer;
@@ -279,6 +282,18 @@ void MailConnection::Receive()
     // @todo
     std::string response;
     sslWrite("RETR 1\r\n");
-	response = sslRead();
-	std::cout << response;
+    response = sslRead();
+    std::cout << response << std::endl;
+
+    std::stringstream ss;
+    ss.clear();
+    ss.str(response);
+
+    // extract sha1 identifier and return code from message
+    Source src = Source(ss);
+    Scanner scan = Scanner(src);
+    Parser prs = Parser(scan);
+    Result result = prs.Analyze();
+    //std::cout << "Sha: " << result.sha << std::endl;
+    //std::cout << "Code: " << result.code << std::endl;
 }
