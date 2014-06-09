@@ -15,8 +15,15 @@ import datamodel.SMS;
 
 public class MailParser {
 	
+	
 	public static final String MailWithSMSSubject = "SMS-GATE";
 	
+	/**
+	 * 
+	 * Enum representing sms parameters which can be read from
+	 * email body
+	 *
+	 */
 	public enum SMSParameter {
 		IDENTIFIER(0), TIMESTAMP(1), RECIPIENT(2), NATIONAL(3), BODY(4);
 		
@@ -30,8 +37,16 @@ public class MailParser {
 		}
 	}
 
+	/**
+	 * Number of SMS parameters from email body
+	 */
 	private static final int emailBodyLinesAmount = 5;
 	
+	/**
+	 * Method which parsed received email and create SMS with its data
+	 * @param message
+	 * @return
+	 */
 	public SMS createSMSWithMailMessage(Message message) {
 		String messageBody = null;
 		String messageSubject = null;

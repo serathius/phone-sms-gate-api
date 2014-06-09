@@ -74,6 +74,7 @@ public class MailReceiver extends Service {
 		serv_port = Integer.valueOf(prefs.getString("serv_port", "993"));
 		serv_delay = Integer.valueOf(prefs.getString("serv_delay", "5"));
 		Log.d(TAG, "MailReceiver service created");
+		ContactsManager.init(getApplicationContext());
 	}
 
 	@Override
